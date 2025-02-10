@@ -11,4 +11,8 @@ public class ExternalUserResponse {
     public List<ExternalUserDto> getUsers() {
         return users;
     }
+
+    public void setUsers(List<ExternalUserDto> users) {
+        this.users = users;
+    }
 }

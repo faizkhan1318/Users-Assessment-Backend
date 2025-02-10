@@ -6,6 +6,7 @@ import com.example.assignment.entity.User;
 import com.example.assignment.exception.ResourceNotFoundException;
 import com.example.assignment.repository.UserRepository;
 import com.example.assignment.service.UserService;
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import org.hibernate.search.mapper.orm.Search;
 import org.hibernate.search.mapper.orm.session.SearchSession;
@@ -17,9 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -33,6 +31,11 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     @Value(("${external.api.url}"))
     private String externalApiUrl;
+
+    @PostConstruct
+    public void init() {
+        loadUsers(); // Load users automatically at startup
+    }
 
     @Override
     public void loadUsers() {
@@ -57,6 +60,7 @@ public class UserServiceImpl implements UserService {
             user.setEmail(userDto.getEmail());
             user.setSsn(userDto.getSsn());
             user.setPhone(userDto.getPhone());
+            user.setAge(userDto.getAge());
             return user;
         }catch (Exception e) {
             throw e;
@@ -71,8 +75,8 @@ public class UserServiceImpl implements UserService {
         return searchSession.search(User.class)
                 .where(f -> f.match()
                         .fields("firstName", "lastName", "ssn")
-                        .matching(query))
-                .fetchHits(20);
+                        .matching(query + ""))
+                .fetchHits(50);
     }
 
     @Override

@@ -10,6 +10,15 @@ public class ExternalUserDto {
     private String email;
     private String ssn;
     private String phone;
+    private Long age;
+
+    public Long getAge() {
+        return age;
+    }
+
+    public void setAge(Long age) {
+        this.age = age;
+    }
 
     public Long getId() {
         return id;
